@@ -1,5 +1,7 @@
 package ru.home.TestServerApplication.server;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -13,8 +15,17 @@ public class Server {
 		try(ServerSocket serverSocket = new ServerSocket(8080)){
 			System.out.println("Wait conection");
 			Socket socket = serverSocket.accept();
+			DataInputStream inputStream = new DataInputStream(socket.getInputStream());
+			DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
+			while (true) {
+				String messeg = inputStream.readUTF();
+				outputStream.writeUTF(messeg);
+				if ("/end".equals(messeg)) {
+					break;
+				}
+			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		
 	}
